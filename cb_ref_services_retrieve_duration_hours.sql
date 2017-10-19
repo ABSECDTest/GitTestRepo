@@ -12,7 +12,7 @@ CREATE PROCEDURE [dbo].[cb_ref_services_retrieve_duration_hours]
 	@ServiceId INT
 AS
 BEGIN
-SELECT DURATIONHRS from CB_REF_SERVICES WITH (NOLOCK) WHERE ServiceId = @ServiceId
+SELECT DURATIONHRS from CB_REF_SERVICES WITH (NOLOCK)
 END
 GO
 
