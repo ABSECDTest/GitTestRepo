@@ -43,5 +43,54 @@ router.get('/users', (req, res) => {
     });
 });
 
+// Get user by Id
+router.get('/users/id', (req, res) => {
+    connection((db) => {
+        db.collection('users')
+            .find({"name": req.query.name, "location": req.query.location})
+            .toArray()
+            .then((users) => {
+                res.send(users);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+});
+
+//HTTP POST
+// Create users
+router.post('/users', (req, res) => {
+    connection((db) => {
+        db.collection('users')
+            .save({name: req.body.name, location: req.body.location}, {w: "majority", wtimeout: 20000})
+            .then((wresult) => {
+                res.send(wresult);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+});
+
+// Delete users
+router.delete('/users/:_id', (req, res) => {
+    console.log(req.params._id);
+    var id = JSON.stringify(req.params);
+    var query = {_id: "ObjectID("+req.params._id+")"}
+    var mongodb = require('mongodb');
+    console.log(query);
+    connection((db) => {
+        db.collection('users')
+            .remove({_id: new mongodb.ObjectID(req.params._id)})
+            .then((wresult) => {
+                res.send(wresult);
+            })
+            .catch((err) => {
+                sendError(err, res);
+            });
+    });
+});
+
 module.exports = router;
 
