@@ -15,14 +15,16 @@
 
     // configuration =================
     app.use(express.static(path.join(__dirname, 'public')));                 // set the static files location /public/img will be /img for users
-    
-    //API location
-    app.use('/api', api)                                            // outes
+
     app.use(morgan('dev'));                                         // log every request to the console
     app.use(bodyParser.urlencoded({'extended':'true'}));            // parse application/x-www-form-urlencoded
     app.use(bodyParser.json());                                     // parse application/json
     app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
     app.use(methodOverride());
+
+        
+    //API location (must be placed after use of body parser to ensure that all requests will be converted to JSON format)
+    app.use('/api', api)                                            // outes
 
         
     //log all other requests here

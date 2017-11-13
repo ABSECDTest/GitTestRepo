@@ -2,13 +2,25 @@
 <html ng-app="MainApp">
 <head>
 <title>MVA Angular Tutorial</title>
-<link rel="icon" type="image/png" href="favicon.png" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE-edge" />
 <meta name="viewport"           content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-animate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+<script src="main-app.start.js"></script>
+<link rel="icon" type="image/png" href="favicon.png" />
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body ng-controller="MainController">
     
+    <div class ="alert" uib-alert ng-repeat="alert in alerts" ng-class="{'alert-success': alert.type == 'success', 'alert-danger': alert.type == 'danger'}" dismiss-on-timeout="5000" close="CloseSuccessByTimeout($index)" ng-animate="'fade'">
+            {{alert.msg}}
+        </div>
+
+    <div class="jumbotron text-center">
     <h1> MVA Jquery Tutorial</h1>
+    </div>
    
     <h2>Evangelists</h2>
     <ul id="evangelists" >
@@ -19,15 +31,14 @@
     <form name="userform">
     <p>name:     <input type="text" id="name" ng-model="user.name" /></p>
     <p>location: <input type="text" id="location" ng-model="user.location"/></p>
-    <button id="btn-add-evangelist" ng-click="addName(user)">Add to list</button>
+    <button id="btn-add-evangelist" class="btn btn-primary" ng-click="addName(user)">Add to list</button>
     <button id="btn-del-evangelist" class="btn btn-default btn" ng-click="delName(user);">Delete User</button>
    </form>
 
   
     
 
-    <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">   </script>--> 
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script src="main-app.start.js"></script>
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">   </script>  -->
+  
 </body>
 </html>

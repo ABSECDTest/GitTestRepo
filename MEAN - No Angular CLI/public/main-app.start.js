@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-angular.module('MainApp', [
+angular.module('MainApp', ['ui.bootstrap', 'ngAnimate'
 	])
 
 .controller("MainController", function ($scope, $http) {
@@ -24,6 +24,15 @@ angular.module('MainApp', [
 		}
 		()
 	};
+	$scope.alerts = [];
+	$scope.addAlert = function(type, message) {
+			$scope.alerts.push({type: type, msg: message});
+		};
+
+	$scope.CloseSuccessByTimeout = function(index){
+						$scope.alerts.splice(0); 
+	}
+
 
 	//initialize config for headers
 	var config = {
@@ -67,13 +76,14 @@ angular.module('MainApp', [
 				var obj = $scope.retData;
 				if (obj.data.length > 0) //if there is, alert
 				{
-					alert('User exists!');
+					$scope.addAlert('danger', 'User exists in the database!');
 				} else //if none, then POST
 				{
 					$http.post('/api/users', user, config)
 					.then(function (res) {
 						console.log(res.data);
-						alert('Added successfully!');
+						//alert('Added successfully!');
+						$scope.addAlert('success', 'Added successfully!');
 						$scope.getNames();
 					})
 					.catch (function (res) {
@@ -109,14 +119,16 @@ angular.module('MainApp', [
 				$scope.retData = res;
 				var obj = $scope.retData;
 				if (obj.data.length == 0) {
-					alert('No data found');
+					$scope.addAlert('danger', 'No data found!');
 				} else {
 					angular.forEach(obj.data, function (item) {
 						//perform delete after getting the ID and append it to url
 						$http.delete ('/api/users/' + item._id, config)
 						.then(function (res) {
+							$scope.addAlert('success','item with item ID: ' + item._id + ' deleted');
 							$scope.getNames();
-							alert('item with item ID: ' + item._id + ' deleted');
+
+							//alert('item with item ID: ' + item._id + ' deleted');
 						});
 					});
 				}
