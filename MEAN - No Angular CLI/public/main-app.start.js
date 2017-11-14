@@ -30,7 +30,7 @@ angular.module('MainApp', ['ui.bootstrap', 'ngAnimate'
 		};
 
 	$scope.CloseSuccessByTimeout = function(index){
-						$scope.alerts.splice(0); 
+						$scope.alerts.splice(index, 1); 
 	}
 
 
