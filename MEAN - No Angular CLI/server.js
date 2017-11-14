@@ -12,6 +12,7 @@
 
     // API file for interacting with MongoDB
     const api = require('./routes/api'); // folder where routes file are stored
+	
 
     // configuration =================
     app.use(express.static(path.join(__dirname, 'public')));                 // set the static files location /public/img will be /img for users

@@ -3,9 +3,11 @@ const router = express.Router(); //HTTP requests
 const MongoClient = require('mongodb').MongoClient; //MongoClient object.  No need to setup models for mongoose.
 const ObjectID = require('mongodb').ObjectID;
 
+var config = require('./config');
+
 // Connect
 const connection = (closure) => {
-    return MongoClient.connect('mongodb://joseph-test:joseph12345@ds042607.mlab.com:42607/testdb1', (err, db) => {
+    return MongoClient.connect(config.database_credentials, (err, db) => {
         if (err) return console.log(err);
 
         closure(db);
