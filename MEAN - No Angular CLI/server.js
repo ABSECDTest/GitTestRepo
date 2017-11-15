@@ -9,7 +9,7 @@
     const methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
     const http = require('http'); //server
     const path = require('path'); //join method
-
+	
     // API file for interacting with MongoDB
     const api = require('./routes/api'); // folder where routes file are stored
 	
@@ -39,4 +39,4 @@
     app.set('port', port);
     
     const server = http.createServer(app);
-    server.listen(port, () => console.log(`Running on localhost:${port}`));
+    server.listen(port, () => console.log(`The magic is happening at port:${port}`));

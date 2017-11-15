@@ -3,16 +3,20 @@ const router = express.Router(); //HTTP requests
 const MongoClient = require('mongodb').MongoClient; //MongoClient object.  No need to setup models for mongoose.
 const ObjectID = require('mongodb').ObjectID;
 
+var mongoose   = require('mongoose');
+mongoose.connect(process.env.DATABASE_CREDENTIALS);
+
+var Users = require('./models/user');
 var config = require('./config');
 
 // Connect
-const connection = (closure) => {
-    return MongoClient.connect(config.database_credentials, (err, db) => {
-        if (err) return console.log(err);
+// const connection = (closure) => {
+//     return MongoClient.connect(config.database_credentials, (err, db) => {
+//         if (err) return console.log(err);
 
-        closure(db);
-    });
-};
+//         closure(db);
+//     });
+// };
 
 const sendError = (err, res) => {
     response.status = 501;
@@ -31,18 +35,25 @@ let response = {
 //HTTP GET
 // Get users
 router.get('/users', (req, res) => {
-    connection((db) => {
-        db.collection('users')
-            .find()
-            .toArray()
-            .then((users) => {
-                //response.data = users;
-                res.json(users);
-            })
-            .catch((err) => {
-                sendError(err, res);
-            });
-    });
+    // connection((db) => {
+    //     db.collection('users')
+    //         .find()
+    //         .toArray()
+    //         .then((users) => {
+    //             //response.data = users;
+    //             res.json(users);
+    //         })
+    //         .catch((err) => {
+    //             sendError(err, res);
+    //         });
+    // });
+    console.log(process.env.DATABASE_CREDENTIALS);
+        User.find(function(err, users) {
+            if (err)
+                sendError(err);
+
+            res.json(users);
+        });
 });
 
 // Get user by Id
