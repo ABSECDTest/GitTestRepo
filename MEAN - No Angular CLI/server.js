@@ -3,7 +3,6 @@
     // set up ========================
     const express  = require('express');
     const app      = express();                               // create our app w/ express
-    const mongoose = require('mongoose');                     // mongoose for mongodb
     const morgan = require('morgan');             // log requests to the console (express4)
     const bodyParser = require('body-parser');    // pull information from HTML POST (express4)
     const methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
@@ -12,7 +11,6 @@
 	
     // API file for interacting with MongoDB
     const api = require('./routes/api'); // folder where routes file are stored
-	
 
     // configuration =================
     app.use(express.static(path.join(__dirname, 'public')));                 // set the static files location /public/img will be /img for users

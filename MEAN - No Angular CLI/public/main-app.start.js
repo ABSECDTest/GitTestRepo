@@ -83,7 +83,7 @@ angular.module('MainApp', ['ui.bootstrap', 'ngAnimate'
 					.then(function (res) {
 						console.log(res.data);
 						//alert('Added successfully!');
-						$scope.addAlert('success', 'Added successfully!');
+						$scope.addAlert('success', 'Added successfully! Assigned ID:' + res.data._id);
 						$scope.getNames();
 					})
 					.catch (function (res) {
