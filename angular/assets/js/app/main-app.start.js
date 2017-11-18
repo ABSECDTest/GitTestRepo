@@ -1,7 +1,15 @@
 ﻿"use strict";
 
+/* =========REVISION HISTORY========================================================
+* 11/6 - Initial. Written for Azure App Service and MEAN                           *
+* 11/17 - Changed approach for ASP MVC                                             *
+*                                                                                  *
+*                                                                                  *
+*==================================================================================*/
+
 angular.module('MainApp', [
 ])
+
 
 .controller("MainController", function ($scope, $http) {
 
@@ -27,31 +35,76 @@ angular.module('MainApp', [
     //initialize config for headers
     var config = {
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/x-www-form-urlencoded',
             'ZUMO-API-VERSION': '2.0.0'
         },
 
     };
 
+    var configPost = {
+        headers: {
+            'ZUMO-API-VERSION': '2.0.0'
+        },
+
+    };
 
     //call getNames function
     getNames();
 
+
     function getNames() {
-        $http.get('https://test-evangelists-1.azurewebsites.net/tables/people', config)
-     .then(function (res) {
-         console.log(res);
-         $scope.people = res.data;
-     });
+    //     $http.get('http://10.47.1.249:8090/tables', config)
+    //  .then(function (res) {
+    //      console.log(res);
+    //      var data = JSON.parse(JSON.stringify(res.data.data));
+    //      $scope.people = data;
+    //  });
+
+            $http.get('http://10.47.1.249:8090/tables', {
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+            })
+            .success(function (res) {
+                console.log(res);
+                $scope.people = res.data;
+            });
     }
 
     // add in resource 
     function addName(user) {
         alert("about to post!")
-        $http.post('https://test-evangelists-1.azurewebsites.net/tables/people', user, config)
-          .then(function (res) {
-              $scope.getNames();
-          });
+        // var params = user;
+        // $http.post('http://localhost:64418/tables/create', user, configPost)
+        //   .then(function (res) {
+        //       $scope.getNames();
+        //   });
+
+        $http.get('http://10.47.1.249:8090/tables/details', {
+            params: { name: user.name, location: user.location },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
+        }).then(function(res)
+        {
+            if (res.data.data.length > 0)
+            {
+                alert('User exists in the database!');
+            }
+            else
+            {
+                $http({
+                    method: 'POST',
+                    url: 'http://localhost:64418/tables/create',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    transformRequest: function(obj) {
+                        var str = [];
+                        for(var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        return str.join("&");
+                    },
+                    data: {Name: $scope._name, Location: $scope._location}
+                        }).success(function () {
+                            $scope.getNames();
+                        });
+            }
+        })          
     }
 
     function delName(user) {
@@ -60,25 +113,27 @@ angular.module('MainApp', [
 
         if (confirmres == true) {
             //get the ID via web service
-            $http.get('\\angular\\EvangelistsWebService.asmx/GetId', {
+            $http.get('http://10.47.1.249:8090/tables/details', {
                 params: { name: user.name, location: user.location },
-                headers: { 'Access-Control-Allow-Origin': '*', 'ZUMO-API-VERSION': '2.0.0' },
-                dataType: "json",
-                contentType: "application/json; charset=utf-8"
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
             })
                .then(function (res) {
                    $scope.retData = res.data;
-                   var obj = JSON.parse($scope.retData);
-                   angular.forEach(obj, function (item) {
-                       if (item.length == 0)
+                   //var obj = JSON.parse($scope.retData);
+                   angular.forEach($scope.retData.data, function (item) {
+                       if (item._id == null)
                            alert('No data found');
                        else {
                            //perform delete after getting the ID and append it to url
-                           $http.delete('https://test-evangelists-1.azurewebsites.net/tables/people/' + item.id, config)
+                           $http.delete('http://localhost:64418/tables/delete', {
+                            params: { id: item._id},
+                            headers: { 'Content-Type': 'text/plain'}
+                           })
                              .then(function (res) {
+                                 alert(item._id + ' deleted');
                                  $scope.getNames();
                              });
-                           alert(item.id + ' deleted');
+                          
                        }
                    });
                });
